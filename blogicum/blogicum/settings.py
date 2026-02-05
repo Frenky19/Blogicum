@@ -9,10 +9,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False').lower() in ('1', 'true', 'yes')
 
 ALLOWED_HOSTS = [
-    '*',
+    host.strip() for host in os.getenv(
+        'ALLOWED_HOSTS', 'localhost,127.0.0.1'
+    ).split(',') if host.strip()
 ]
 
 INSTALLED_APPS = [
@@ -52,6 +54,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
 
 MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
 
 LOGIN_REDIRECT_URL = 'blog:index'
 
@@ -113,7 +116,7 @@ TIME_FORMAT = 'H:i'
 USE_TZ = True
 
 STATIC_URL = '/static/'
-
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
